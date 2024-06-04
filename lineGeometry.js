@@ -59,56 +59,51 @@ class LineGeometry {
   processLine(g) {
     this.curr = [];
 
-    for (var j = 0; j < g.vertices.length; j++) {
+    const verticesCount = g.vertices.length;
+
+    for (var j = 0; j < verticesCount; j++) {
       var v = g.vertices[j];
       this.curr.push(v.x, v.y, v.z);
       this.curr.push(v.x, v.y, v.z);
     }
-
-    var l = this.curr.length / 6;
-
+    
     this.prev = [];
     this.next = [];
     this.side = [];
     this.indices = [];
 
-    for (var j = 0; j < l; j++) {
+    for (var j = 0; j < verticesCount; j++) {
       this.side.push(1);
       this.side.push(-1);
     }
 
     var v;
 
-    if (this.compare(0, l - 1)) {
-      v = this.copy(l - 2);
-    } else {
-      v = this.copy(0);
-    }
+    // prev
+    v = this.copy(0);
     this.prev.push(v[0], v[1], v[2]);
     this.prev.push(v[0], v[1], v[2]);
 
-    for (var j = 0; j < l - 1; j++) {
+    for (var j = 0; j < verticesCount - 1; j++) {
       v = this.copy(j);
       this.prev.push(v[0], v[1], v[2]);
       this.prev.push(v[0], v[1], v[2]);
     }
 
-    for (var j = 1; j < l; j++) {
+    // next
+    for (var j = 1; j < verticesCount; j++) {
       v = this.copy(j);
       this.next.push(v[0], v[1], v[2]);
       this.next.push(v[0], v[1], v[2]);
     }
 
-    if (this.compare(l - 1, 0)) {
-      v = this.copy(1);
-    } else {
-      v = this.copy(l - 1);
-    }
+    v = this.copy(verticesCount - 1);
 
     this.next.push(v[0], v[1], v[2]);
     this.next.push(v[0], v[1], v[2]);
 
-    for (var j = 0; j < l - 1; j++) {
+    // indices
+    for (var j = 0; j < verticesCount - 1; j++) {
       var n = j * 2;
       this.indices.push(n, n + 1, n + 2);
       this.indices.push(n + 2, n + 1, n + 3);

@@ -63,6 +63,7 @@ THREE.ShaderLib["ascendingLine"] = {
 			vec4 prevProj = transform(prev.xyz);
 			vec4 currProj = transform(curr.xyz);
 			vec4 nextProj = transform(next.xyz);
+
 			if (currProj.w < 0.0) {
 				if (prevProj.w < 0.0) {
 					currProj = clipNear(currProj, nextProj);
@@ -70,6 +71,7 @@ THREE.ShaderLib["ascendingLine"] = {
 					currProj = clipNear(currProj, prevProj);
 				}
 			}
+
 			vec2 prevScreen = project(prevProj);
 			vec2 currScreen = project(currProj);
 			vec2 nextScreen = project(nextProj);
@@ -111,24 +113,12 @@ THREE.ShaderLib["ascendingLine"] = {
 		    float backAlpha ;
 		    vec4 backColor = BackColor;
         float modTime = mod(CurrentTime, v_CycleTimeOut);
-        float intTime = floor(CurrentTime/(v_CycleTimeOut-TraceTime));
         float alpha = 0.0;
         if(v_TimeOut > modTime){
           alpha = 0.0;
         }
-        else if(v_TimeOut < modTime - TraceTime){
-          alpha = 0.0;
-        }
         else{
-          if(intTime < 1.0){
-            alpha = 0.0;
-            if(v_TimeOut < modTime-TraceTime){
-              backAlpha = backColor.a;
-            }
-            backColor.a = 1.0;
-          }else{
-            alpha = (TraceTime - (modTime - v_TimeOut)) / TraceTime;
-          }
+          alpha = (TraceTime - (modTime - v_TimeOut)) / TraceTime;
         }
         gl_FragColor = mix(backColor, FColor, alpha);
     }     
